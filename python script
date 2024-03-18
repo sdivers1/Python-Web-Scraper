@@ -1,0 +1,34 @@
+#Web Scraper by Sparsh Kalia
+
+#Importing all the necessary libraries
+import requests
+from bs4 import BeautifulSoup
+
+#Working with the url link of the webpage you want to scrape data from
+url = "https://www.remax.ca/on/toronto-real-estate?pageNumber=1"
+result = requests.get(url).text
+doc = BeautifulSoup(result, "html.parser")
+print(doc.prettify())
+
+#Finding all the elements in a specific html tag and looping through each element to put them in a dataframe
+res = doc.find_all(class_ = "listing-address_root__PP_Ky listing-card_address___bLLz")
+address = []
+for ele in res:
+      address.append(ele.text)
+print(address)
+
+rep = doc.find_all(class_ = "listing-card_price__sL9TT")
+price = []
+for element in rep:
+    price.append(element.text)
+print(price)
+
+#Importing necessary library and storing data in a csv
+import pandas as pd
+df = pd.DataFrame()
+df['address'] = address
+df['price'] = price
+print(df)
+
+df.to_csv('realestate_data.csv')
+
